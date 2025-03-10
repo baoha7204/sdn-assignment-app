@@ -5,6 +5,7 @@ import {
   changePasswordValidator,
   editProfileValidator,
 } from "../validators/users.validator.js";
+import { requireAdmin } from "../middlewares/requireAdmin.middleware.js";
 
 const usersRouter = Router();
 usersRouter.use(requireAuth);
@@ -24,5 +25,11 @@ usersRouter.patch(
   requestValidation,
   usersController.patchEditPassword
 );
+
+// ADMIN ONLY
+usersRouter.use(requireAdmin);
+
+// GET /users
+usersRouter.get("/", usersController.getUsers);
 
 export default usersRouter;

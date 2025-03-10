@@ -16,6 +16,7 @@ import LoginPage from "@/pages/Login";
 import RegisterPage from "@/pages/Register";
 import UnauthorizedPage from "@/pages/403";
 import NotFoundPage from "@/pages/404";
+import PerfumeDetailPage from "@/pages/Perfumes/PerfumeDetail";
 
 // Protected pages
 import ProfilePage from "@/pages/Profile";
@@ -27,8 +28,9 @@ import ManageBrandDetailPage from "@/pages/Brands/ManageBrandDetail";
 import ManagePerfumesPage from "@/pages/Perfumes/ManagePerfumes";
 import ManagePerfumeDetailPage from "@/pages/Perfumes/ManagePerfumeDetail";
 
+import ManageUsers from "@/pages/Users/ManageUsers";
+
 import { useAuth } from "@/contexts/auth.context";
-import PerfumeDetailPage from "@/pages/Perfumes/PerfumeDetail";
 
 // Protect routes that require authentication
 const ProtectedRoute = () => {
@@ -126,6 +128,10 @@ const Router = () => {
                   element: <ManagePerfumeDetailPage mode="edit" />,
                 },
               ],
+            },
+            {
+              path: "collectors",
+              element: <ManageUsers />,
             },
           ],
         },
