@@ -3,7 +3,7 @@ import "express-async-errors";
 import cookieSession from "cookie-session";
 import cors from "cors";
 import dotenv from "dotenv";
-import { currentUser, errorHandler } from "@bhtickix/common";
+import { currentUser, errorHandler, NotFoundError } from "@bhtickix/common";
 
 import authRouter from "./routes/auth.route.js";
 import usersRouter from "./routes/users.route.js";
@@ -13,7 +13,14 @@ import perfumesRouter from "./routes/perfumes.route.js";
 dotenv.config();
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: [process.env.CLIENT_BASE_URL],
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+    optionsSuccessStatus: 204,
+  })
+);
 app.use(
   cookieSession({
     name: "session",

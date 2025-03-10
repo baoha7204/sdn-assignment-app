@@ -30,10 +30,4 @@ export const signupValidator = [
     .trim()
     .isLength({ min: 4, max: 20 })
     .withMessage("Password must be between 4 and 20 characters"),
-  body("confirmPassword").custom((value, { req }) => {
-    if (value !== req.body.password) {
-      throw new BadRequestError("Passwords do not match.");
-    }
-    return true;
-  }),
 ];

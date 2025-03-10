@@ -26,6 +26,8 @@ const postSignin = async (req, res) => {
   const userPayload = {
     id: existedUser.id,
     email: existedUser.email,
+    name: existedUser.name,
+    isAdmin: existedUser.isAdmin,
   };
   const userJwt = Jwt.sign(userPayload);
   req.session = {
