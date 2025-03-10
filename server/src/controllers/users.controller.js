@@ -1,4 +1,4 @@
-import { DatabaseConnectionError, NotFoundError } from "@bhtickix/common";
+import { DatabaseConnectionError, Jwt, NotFoundError } from "@bhtickix/common";
 import Member from "../models/member.model.js";
 
 const putEditProfile = async (req, res) => {
@@ -13,11 +13,25 @@ const putEditProfile = async (req, res) => {
   user.gender = gender;
   try {
     await user.save();
+
+    // Generate JWT and store it in the session object
+    const userPayload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      isAdmin: user.isAdmin,
+      YOB: user.YOB,
+      gender: user.gender,
+    };
+    const userJwt = Jwt.sign(userPayload);
+    req.session = {
+      jwt: userJwt,
+    };
+
+    res.send(user);
   } catch (err) {
     throw new DatabaseConnectionError();
   }
-
-  res.send(user);
 };
 
 const patchEditPassword = async (req, res) => {

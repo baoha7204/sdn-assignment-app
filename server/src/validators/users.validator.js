@@ -42,12 +42,4 @@ export const changePasswordValidator = [
       }
       return true;
     }),
-  body("confirmPassword")
-    .trim()
-    .custom((value, { req }) => {
-      if (value !== req.body.newPassword) {
-        throw new BadRequestError("Passwords do not match!");
-      }
-      return true;
-    }),
 ];

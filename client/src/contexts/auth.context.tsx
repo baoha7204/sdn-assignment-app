@@ -6,16 +6,20 @@ import {
   useState,
 } from "react";
 import { customAxios } from "@/config/axios";
+import { ProfileInputs } from "@/pages/Profile/ProfileForm";
 
-interface User {
+export interface User {
   id: string;
   email: string;
   name: string;
   isAdmin: boolean;
+  YOB: number;
+  gender: boolean;
 }
 
 interface AuthContextType {
   currentUser: User | null;
+  updateProfile: (user: ProfileInputs) => void;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (data: any) => Promise<void>;
@@ -75,12 +79,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const updateProfile = (user: ProfileInputs) => {
+    setCurrentUser((prev) => ({
+      ...prev!,
+      name: user.name,
+      YOB: user.YOB,
+      gender: user.gender,
+    }));
+  };
+
   const value = {
     currentUser,
     isLoading,
     login,
     signup,
     logout,
+    updateProfile,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

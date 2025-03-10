@@ -14,6 +14,7 @@ import LoginPage from "@/pages/Login";
 import RegisterPage from "@/pages/Register";
 import UnauthorizedPage from "@/pages/403";
 import NotFoundPage from "@/pages/404";
+import ProfilePage from "@/pages/Profile";
 
 import { Spinner } from "@/components/ui/spinner";
 
@@ -58,7 +59,7 @@ const Router = () => {
         { path: "*", element: <NotFoundPage /> },
         {
           element: <ProtectedRoute />,
-          children: [],
+          children: [{ path: "profile", element: <ProfilePage /> }],
         },
       ],
     },
