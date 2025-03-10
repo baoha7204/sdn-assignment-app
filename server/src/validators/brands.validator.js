@@ -1,7 +1,7 @@
 import { body } from "express-validator";
 import Brand from "../models/brand.model.js";
 
-export const brandValidator = [
+export const addbrandValidator = [
   body("brandName")
     .trim()
     .notEmpty()
@@ -18,4 +18,8 @@ export const brandValidator = [
       }
       return true;
     }),
+];
+
+export const editbrandValidator = [
+  body("brandName").trim().notEmpty().withMessage("Brand name is required"),
 ];

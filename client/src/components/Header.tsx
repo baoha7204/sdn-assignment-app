@@ -50,19 +50,28 @@ const Header = () => {
               {currentUser?.isAdmin && (
                 <>
                   <Button variant="ghost" asChild>
-                    <Link to="/brands" className="flex items-center gap-2">
+                    <Link
+                      to="/admin/brands"
+                      className="flex items-center gap-2"
+                    >
                       <Package className="h-4 w-4" />
                       <span>Brands</span>
                     </Link>
                   </Button>
                   <Button variant="ghost" asChild>
-                    <Link to="/perfumes" className="flex items-center gap-2">
+                    <Link
+                      to="/admin/perfumes"
+                      className="flex items-center gap-2"
+                    >
                       <FlaskConical className="h-4 w-4" />
                       <span>Perfumes</span>
                     </Link>
                   </Button>
                   <Button variant="ghost" asChild>
-                    <Link to="/collectors" className="flex items-center gap-2">
+                    <Link
+                      to="/admin/collectors"
+                      className="flex items-center gap-2"
+                    >
                       <User className="h-4 w-4" />
                       <span>Collectors</span>
                     </Link>

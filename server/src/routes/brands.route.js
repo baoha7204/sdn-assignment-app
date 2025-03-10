@@ -5,20 +5,26 @@ import brandsController from "../controllers/brands.controller.js";
 
 import { requireAdmin } from "../middlewares/requireAdmin.middleware.js";
 
-import { brandValidator } from "../validators/brands.validator.js";
+import {
+  addbrandValidator,
+  editbrandValidator,
+} from "../validators/brands.validator.js";
 
 const brandsRouter = Router();
 
-// PUBLIC ROUTES
+// GET /brands
+brandsRouter.get("/", brandsController.getBrands);
+
 // GET /brands/:id
 brandsRouter.get("/:id", brandsController.getBrandDetail);
 
 // ADMIN ROUTES
 brandsRouter.use(requireAuth, requireAdmin);
+
 // POST /brands
 brandsRouter.post(
   "/",
-  brandValidator,
+  addbrandValidator,
   requestValidation,
   brandsController.postAddBrand
 );
@@ -26,7 +32,7 @@ brandsRouter.post(
 // PUT /brands/:id
 brandsRouter.put(
   "/:id",
-  brandValidator,
+  editbrandValidator,
   requestValidation,
   brandsController.putEditBrand
 );
