@@ -4,12 +4,14 @@ import {
   NotFoundError,
 } from "@bhtickix/common";
 import Perfume from "../models/perfume.model.js";
-import Brand from "../models/brand.model.js";
 
-const getPerfumes = async (req, res) => {
+const getPerfumes = (mode) => async (req, res) => {
   const { page = 1, limit = 10, search = "", brandId = "" } = req.query;
 
-  const query = {};
+  let query = {};
+  if (mode === "member") {
+    query.isActive = true;
+  }
 
   // Search by perfume name if search term is provided
   if (search) {

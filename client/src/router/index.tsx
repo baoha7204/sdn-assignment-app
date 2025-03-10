@@ -28,6 +28,7 @@ import ManagePerfumesPage from "@/pages/Perfumes/ManagePerfumes";
 import ManagePerfumeDetailPage from "@/pages/Perfumes/ManagePerfumeDetail";
 
 import { useAuth } from "@/contexts/auth.context";
+import PerfumeDetailPage from "@/pages/Perfumes/PerfumeDetail";
 
 // Protect routes that require authentication
 const ProtectedRoute = () => {
@@ -79,6 +80,16 @@ const Router = () => {
       element: <DefaultLayout />,
       children: [
         { index: true, element: <HomePage /> },
+        {
+          path: "perfumes",
+          children: [
+            { index: true, element: <HomePage /> },
+            {
+              path: ":id",
+              element: <PerfumeDetailPage />,
+            },
+          ],
+        },
         { path: "unauthorized", element: <UnauthorizedPage /> },
         { path: "*", element: <NotFoundPage /> },
         // Protected route
