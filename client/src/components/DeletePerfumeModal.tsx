@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,31 +7,32 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "./ui/spinner";
+import { Spinner } from "@/components/ui/spinner";
 
-interface DeleteBrandModalProps {
+interface DeletePerfumeModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  brandName: string;
-  isLoading?: boolean;
+  perfumeName: string;
+  isLoading: boolean;
 }
 
-const DeleteBrandModal: React.FC<DeleteBrandModalProps> = ({
+const DeletePerfumeModal = ({
   isOpen,
   onClose,
   onConfirm,
-  brandName,
-  isLoading = false,
-}) => {
+  perfumeName,
+  isLoading,
+}: DeletePerfumeModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete Brand</DialogTitle>
+          <DialogTitle>Are you sure?</DialogTitle>
           <DialogDescription>
-            Are you sure you want to delete the brand "{brandName}"? This action
-            cannot be undone.
+            This will permanently delete the perfume{" "}
+            <span className="font-bold">{perfumeName}</span>. This action cannot
+            be undone.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -48,4 +48,4 @@ const DeleteBrandModal: React.FC<DeleteBrandModalProps> = ({
   );
 };
 
-export default DeleteBrandModal;
+export default DeletePerfumeModal;

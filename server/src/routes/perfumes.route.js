@@ -10,6 +10,9 @@ import { perfumeValidator } from "../validators/perfumes.validator.js";
 const perfumesRouter = Router();
 
 // PUBLIC ROUTES
+// GET /perfumes - get all perfumes with pagination
+perfumesRouter.get("/", perfumesController.getPerfumes);
+
 // GET /perfumes/:id
 perfumesRouter.get("/:id", perfumesController.getPerfumeDetail);
 

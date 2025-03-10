@@ -4,13 +4,52 @@ import {
   NotFoundError,
 } from "@bhtickix/common";
 import Perfume from "../models/perfume.model.js";
+import Brand from "../models/brand.model.js";
 
-const getPerfumes = async (req, res) => {};
+const getPerfumes = async (req, res) => {
+  const { page = 1, limit = 10, search = "", brandId = "" } = req.query;
+
+  const query = {};
+
+  // Search by perfume name if search term is provided
+  if (search) {
+    query.perfumeName = { $regex: search, $options: "i" };
+  }
+
+  // Filter by brand if brandId is provided
+  if (brandId) {
+    query.brand = brandId;
+  }
+
+  try {
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const [perfumes, totalCount] = await Promise.all([
+      Perfume.find(query)
+        .populate("brand", "brandName")
+        .skip(skip)
+        .limit(parseInt(limit))
+        .sort({ createdAt: -1 }),
+      Perfume.countDocuments(query),
+    ]);
+
+    const totalPages = Math.ceil(totalCount / parseInt(limit));
+
+    res.status(200).send({
+      perfumes,
+      currentPage: parseInt(page),
+      totalPages,
+      total: totalCount,
+    });
+  } catch (error) {
+    throw new DatabaseConnectionError();
+  }
+};
 
 const getPerfumeDetail = async (req, res) => {
   const { id } = req.params;
 
-  const perfume = await Perfume.findById(id);
+  const perfume = await Perfume.findById(id).populate("brand");
   if (!perfume) {
     throw new NotFoundError("Perfume not found");
   }

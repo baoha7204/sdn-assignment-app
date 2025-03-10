@@ -107,8 +107,12 @@ const Router = () => {
               children: [
                 { index: true, element: <ManagePerfumesPage /> },
                 {
+                  path: "add",
+                  element: <ManagePerfumeDetailPage mode="add" />,
+                },
+                {
                   path: ":id",
-                  element: <ManagePerfumeDetailPage />,
+                  element: <ManagePerfumeDetailPage mode="edit" />,
                 },
               ],
             },
