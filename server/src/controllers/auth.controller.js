@@ -6,8 +6,11 @@ import {
 import Member from "../models/member.model.js";
 
 const getSelf = async (req, res) => {
+  if (!req.currentUser) {
+    return res.status(200).send({ currentUser: null });
+  }
   const user = await Member.findById(req.currentUser.id);
-  res.status(200).send({ currentUser: user || null });
+  res.status(200).send({ currentUser: user });
 };
 
 const postSignin = async (req, res) => {

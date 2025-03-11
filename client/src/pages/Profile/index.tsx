@@ -10,8 +10,7 @@ import {
 
 import ProfileForm from "./ProfileForm";
 import ChangePasswordForm from "./ChangePasswordForm";
-
-import { useAuth } from "@/contexts/auth.context";
+import { useAuth } from "@/hooks/useAuth";
 
 const ProfilePage: React.FC = () => {
   const { currentUser, updateProfile } = useAuth();

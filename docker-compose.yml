@@ -1,0 +1,60 @@
+services:
+  api:
+    build:
+      context: server
+      dockerfile: Dockerfile
+    container_name: perfume-api
+    restart: always
+    develop:
+      watch:
+        - action: sync
+          path: server
+          target: /app
+          ignore:
+            - node-modules/
+        - action: rebuild
+          path: package.json
+    ports:
+      - 3000:3000
+    environment:
+      - MONGO_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@perfume-mongo:27017
+      - JWT_KEY=${JWT_KEY}
+      - CLIENT_BASE_URL=${CLIENT_BASE_URL}
+    depends_on:
+      - mongo
+  client:
+    build:
+      context: client
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+    container_name: perfume-client
+    restart: always
+    develop:
+      watch:
+        - action: sync
+          path: client
+          target: /app
+          ignore:
+            - node-modules/
+        - action: rebuild
+          path: package.json
+    ports:
+      - 5173:5173
+    depends_on:
+      - api
+  mongo:
+    image: mongo
+    container_name: perfume-mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
+    driver: local

@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { CommentData } from "@/api/perfume.api";
+
 import CommentForm from "./CommentForm";
-import { useAuth } from "@/contexts/auth.context";
+import { CommentData } from "@/api/perfume.api";
+import { User } from "@/contexts/auth.context";
 
 interface CommentItemProps {
+  currentUser: User | null;
   comment: CommentData;
   perfumeId: string;
   onUpdate: (
@@ -18,13 +20,13 @@ interface CommentItemProps {
 }
 
 const CommentItem = ({
+  currentUser,
   comment,
   perfumeId,
   onUpdate,
   onDelete,
 }: CommentItemProps) => {
   const [editing, setEditing] = useState(false);
-  const { currentUser } = useAuth();
 
   const isAuthor = currentUser && currentUser.id === comment.author.id;
 

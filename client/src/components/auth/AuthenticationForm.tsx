@@ -22,8 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import { useAuth } from "@/contexts/auth.context";
+import { useAuth } from "@/hooks/useAuth";
 
 // Login schema
 const loginSchema = z.object({
@@ -109,7 +108,6 @@ const AuthenticationForm = ({ mode }: AuthenticationFormProps) => {
       toast.success("Logged in successfully!");
       navigate("/");
     } catch (error) {
-      // Show the error message from the server if available
       toast.error(
         error.response?.data?.errors[0]?.message ||
           "Invalid credentials. Please try again."

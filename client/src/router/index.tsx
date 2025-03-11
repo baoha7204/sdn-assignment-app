@@ -29,8 +29,7 @@ import ManagePerfumesPage from "@/pages/Perfumes/ManagePerfumes";
 import ManagePerfumeDetailPage from "@/pages/Perfumes/ManagePerfumeDetail";
 
 import ManageUsers from "@/pages/Users/ManageUsers";
-
-import { useAuth } from "@/contexts/auth.context";
+import { useAuth } from "@/hooks/useAuth";
 
 // Protect routes that require authentication
 const ProtectedRoute = () => {

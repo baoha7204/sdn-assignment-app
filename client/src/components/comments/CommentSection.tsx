@@ -5,7 +5,7 @@ import CommentItem from "./CommentItem";
 import CommentForm from "./CommentForm";
 import RatingSummary from "./RatingSummary";
 import { Link } from "react-router-dom";
-import { useAuth } from "@/contexts/auth.context";
+import { useAuth } from "@/hooks/useAuth";
 
 interface CommentSectionProps {
   perfumeId: string;
@@ -98,6 +98,7 @@ const CommentSection = ({
         ) : (
           comments.map((comment) => (
             <CommentItem
+              currentUser={currentUser}
               key={comment._id}
               comment={comment}
               perfumeId={perfumeId}
