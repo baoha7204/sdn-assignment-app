@@ -48,7 +48,7 @@ const PerfumeDetailPage = () => {
     const fetchPerfumeDetails = async () => {
       try {
         setLoading(true);
-        const data = await perfumeApi.getPerfumeById(id);
+        const data = await perfumeApi.getPerfumeById(id!);
         setPerfume(data);
         setLoading(false);
       } catch (error) {
@@ -180,11 +180,7 @@ const PerfumeDetailPage = () => {
 
         <div>
           <div className="mb-6">
-            <Link to={`/brands/${perfume.brand.id}`}>
-              <h3 className="text-lg text-muted-foreground hover:underline">
-                {perfume.brand.brandName}
-              </h3>
-            </Link>
+            <h3 className="text-lg">{perfume.brand.brandName}</h3>
             <h1 className="text-4xl font-bold">{perfume.perfumeName}</h1>
 
             <div className="flex items-center gap-3 mt-2">

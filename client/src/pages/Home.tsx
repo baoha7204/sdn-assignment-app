@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -11,10 +12,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Spinner } from "@/components/ui/spinner";
+
 import { PerfumeConcentration } from "@/lib/constants";
 import brandApi, { BrandData } from "@/api/brand.api";
 import perfumeApi, { PerfumeData } from "@/api/perfume.api";
-import { Filter } from "lucide-react";
 import { useDebounceValue } from "@/hooks/useDebounceValue";
 
 const HomePage = () => {
@@ -130,7 +132,7 @@ const HomePage = () => {
 
       {loading ? (
         <div className="flex justify-center py-12">
-          <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full"></div>
+          <Spinner size="lg" />
         </div>
       ) : (
         <>
@@ -153,7 +155,12 @@ const HomePage = () => {
                       <p className="text-muted-foreground">
                         {perfume.brand.brandName}
                       </p>
-                      <p className="mt-2">For: {perfume.targetAudience}</p>
+                      <p className="mt-2">
+                        For:{" "}
+                        <span className="font-semibold capitalize">
+                          {perfume.targetAudience}
+                        </span>
+                      </p>
                     </CardContent>
                     <CardFooter className="flex justify-between">
                       <div className="text-lg font-bold">

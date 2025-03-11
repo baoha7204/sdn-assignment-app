@@ -12,6 +12,7 @@ import {
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import RatingStars from "@/components/ui/rating-stars";
 
 const formSchema = z.object({
   rating: z.number().min(1).max(3),
@@ -67,55 +68,15 @@ const CommentForm = ({
           control={form.control}
           name="rating"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Rating</FormLabel>
+            <FormItem className="flex space-y-2 gap-4">
               <FormControl>
-                <div className="flex gap-4">
-                  {[1, 2, 3].map((value) => (
-                    <label
-                      key={value}
-                      className="cursor-pointer flex flex-col items-center"
-                    >
-                      <input
-                        type="radio"
-                        className="sr-only"
-                        value={value}
-                        checked={field.value === value}
-                        onChange={() => field.onChange(value)}
-                      />
-                      <div className="flex">
-                        {[...Array(value)].map((_, i) => (
-                          <svg
-                            key={i}
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-8 w-8 text-yellow-500 fill-yellow-500"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                        ))}
-                        {[...Array(3 - value)].map((_, i) => (
-                          <svg
-                            key={i + value}
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-8 w-8 text-gray-300 fill-gray-300"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                        ))}
-                      </div>
-                      <span className="mt-1 text-sm">
-                        {value === 1
-                          ? "Poor"
-                          : value === 2
-                          ? "Good"
-                          : "Excellent"}
-                      </span>
-                    </label>
-                  ))}
+                <div className="flex justify-center md:justify-start">
+                  <RatingStars
+                    rating={field.value}
+                    onChange={field.onChange}
+                    disabled={isSubmitting}
+                    size="lg"
+                  />
                 </div>
               </FormControl>
               <FormMessage />
@@ -134,6 +95,7 @@ const CommentForm = ({
                   placeholder="Share your thoughts about this perfume..."
                   className="min-h-[100px]"
                   {...field}
+                  disabled={isSubmitting}
                 />
               </FormControl>
               <FormMessage />
@@ -143,7 +105,12 @@ const CommentForm = ({
 
         <div className="flex gap-2 justify-end">
           {onCancel && (
-            <Button type="button" variant="outline" onClick={onCancel}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              disabled={isSubmitting}
+            >
               Cancel
             </Button>
           )}
