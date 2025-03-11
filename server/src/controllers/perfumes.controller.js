@@ -51,7 +51,11 @@ const getPerfumes = (mode) => async (req, res) => {
 const getPerfumeDetail = async (req, res) => {
   const { id } = req.params;
 
-  const perfume = await Perfume.findById(id).populate("brand");
+  const perfume = await Perfume.findById(id).populate("brand").populate({
+    path: "comments.author",
+    model: "Member",
+    select: "email name",
+  });
   if (!perfume) {
     throw new NotFoundError("Perfume not found");
   }
@@ -154,10 +158,128 @@ const deletePerfume = async (req, res) => {
   }
 };
 
+const postAddComment = async (req, res) => {
+  const { perfumeId } = req.params;
+  const { rating, content } = req.body;
+
+  const perfume = await Perfume.findById(perfumeId);
+  if (!perfume) {
+    throw new NotFoundError("Perfume not found");
+  }
+
+  // Check if user already commented on this perfume
+  const existingComment = perfume.comments.find(
+    (comment) => comment.author.toString() === req.currentUser.id.toString()
+  );
+
+  if (existingComment) {
+    throw new BadRequestError("You already commented on this perfume");
+  }
+
+  perfume.comments.push({
+    rating: parseInt(rating),
+    content,
+    author: req.currentUser.id,
+  });
+
+  try {
+    await perfume.save();
+    const savedPerfume = await Perfume.findById(perfumeId).populate({
+      path: "comments.author",
+      model: "Member",
+      select: "email name",
+    });
+    res.status(201).send(savedPerfume);
+  } catch (error) {
+    throw new DatabaseConnectionError();
+  }
+};
+
+const putEditComment = async (req, res) => {
+  const { perfumeId, commentId } = req.params;
+  const { rating, content } = req.body;
+
+  const perfume = await Perfume.findById(perfumeId);
+  if (!perfume) {
+    throw new NotFoundError("Perfume not found");
+  }
+
+  const comment = perfume.comments.id(commentId);
+  if (!comment) {
+    throw new NotFoundError("Comment not found");
+  }
+
+  if (comment.author.toString() !== req.currentUser.id.toString()) {
+    throw new BadRequestError("You cannot edit other user's comment");
+  }
+
+  try {
+    comment.rating = parseInt(rating);
+    comment.content = content;
+
+    await perfume.save();
+
+    const updatedPerfume = await Perfume.findById(perfumeId).populate({
+      path: "comments.author",
+      model: "Member",
+      select: "email name",
+    });
+
+    res.send(updatedPerfume);
+  } catch (error) {
+    throw new DatabaseConnectionError();
+  }
+};
+
+const deleteComment = async (req, res) => {
+  const { perfumeId, commentId } = req.params;
+
+  const perfume = await Perfume.findById(perfumeId);
+  if (!perfume) {
+    throw new NotFoundError("Perfume not found");
+  }
+
+  const comment = perfume.comments.id(commentId);
+  if (!comment) {
+    throw new NotFoundError("Comment not found");
+  }
+
+  if (comment.author.toString() !== req.currentUser.id.toString()) {
+    throw new BadRequestError("You cannot edit other user's comment");
+  }
+
+  try {
+    await Perfume.updateOne(
+      {
+        _id: perfumeId,
+      },
+      {
+        $pull: {
+          comments: {
+            _id: commentId,
+          },
+        },
+      }
+    );
+    // send the perfume that has been updated
+    const updatedPerfume = await Perfume.findById(perfumeId).populate({
+      path: "comments.author",
+      model: "Member",
+      select: "email name",
+    });
+    res.send(updatedPerfume);
+  } catch (error) {
+    throw new DatabaseConnectionError();
+  }
+};
+
 export default {
   getPerfumes,
   getPerfumeDetail,
   postAddPerfume,
   putEditPefume,
   deletePerfume,
+  postAddComment,
+  putEditComment,
+  deleteComment,
 };

@@ -1,5 +1,22 @@
 import { customAxios } from "@/config/axios";
 
+export interface CommentData {
+  _id: string;
+  rating: number;
+  content: string;
+  author: {
+    id: string;
+    name: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CommentInput {
+  rating: number;
+  content: string;
+}
+
 export interface PerfumeData {
   id: string;
   perfumeName: string;
@@ -17,6 +34,7 @@ export interface PerfumeData {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  comments: CommentData[];
 }
 
 export interface PerfumeInput {
@@ -73,6 +91,34 @@ const perfumeApi = {
 
   deletePerfume: async (id: string) => {
     const response = await customAxios.delete(`/perfumes/${id}`);
+    return response.data;
+  },
+
+  // Comment-related API functions
+  addComment: async (perfumeId: string, commentData: CommentInput) => {
+    const response = await customAxios.post<PerfumeData>(
+      `/perfumes/${perfumeId}/comments`,
+      commentData
+    );
+    return response.data;
+  },
+
+  updateComment: async (
+    perfumeId: string,
+    commentId: string,
+    commentData: CommentInput
+  ) => {
+    const response = await customAxios.put<PerfumeData>(
+      `/perfumes/${perfumeId}/comments/${commentId}`,
+      commentData
+    );
+    return response.data;
+  },
+
+  deleteComment: async (perfumeId: string, commentId: string) => {
+    const response = await customAxios.delete<PerfumeData>(
+      `/perfumes/${perfumeId}/comments/${commentId}`
+    );
     return response.data;
   },
 };

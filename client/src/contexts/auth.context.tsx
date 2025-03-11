@@ -84,7 +84,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       ...prev!,
       name: user.name,
       YOB: user.YOB,
-      gender: user.gender,
+      gender: Boolean(user.gender),
     }));
   };
 

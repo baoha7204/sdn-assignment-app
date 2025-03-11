@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import perfumeApi from "@/api/perfume.api";
+import CommentSection from "@/components/comments/CommentSection";
 
 // Updated interface to match the actual model
 interface Perfume {
@@ -24,6 +25,17 @@ interface Perfume {
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
+  comments: Array<{
+    _id: string;
+    rating: number;
+    content: string;
+    author: {
+      id: string;
+      name: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+  }>;
 }
 
 const PerfumeDetailPage = () => {
@@ -70,6 +82,63 @@ const PerfumeDetailPage = () => {
       );
     } else {
       return <Badge>{concentration}</Badge>;
+    }
+  };
+
+  const handleAddComment = async (
+    perfumeId: string,
+    rating: number,
+    content: string
+  ) => {
+    try {
+      const updatedPerfume = await perfumeApi.addComment(perfumeId, {
+        rating,
+        content,
+      });
+      setPerfume(updatedPerfume);
+      toast.success("Your review has been successfully posted");
+    } catch (error: any) {
+      toast.success(
+        error.response?.data?.errors[0]?.message || "Failed to add comment"
+      );
+      throw error;
+    }
+  };
+
+  const handleUpdateComment = async (
+    perfumeId: string,
+    commentId: string,
+    rating: number,
+    content: string
+  ) => {
+    try {
+      const updatedPerfume = await perfumeApi.updateComment(
+        perfumeId,
+        commentId,
+        { rating, content }
+      );
+      setPerfume(updatedPerfume);
+      toast.success("Your review has been successfully updated");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.errors[0]?.message || "Failed to update comment"
+      );
+      throw error;
+    }
+  };
+
+  const handleDeleteComment = async (perfumeId: string, commentId: string) => {
+    try {
+      const updatedPerfume = await perfumeApi.deleteComment(
+        perfumeId,
+        commentId
+      );
+      setPerfume(updatedPerfume);
+      toast.success("Your review has been successfully deleted");
+    } catch (error) {
+      toast.error(
+        error.response?.data?.errors[0]?.message || "Failed to delete comment"
+      );
     }
   };
 
@@ -148,6 +217,14 @@ const PerfumeDetailPage = () => {
           )}
         </div>
       </div>
+
+      <CommentSection
+        perfumeId={perfume.id}
+        comments={perfume.comments}
+        onAddComment={handleAddComment}
+        onUpdateComment={handleUpdateComment}
+        onDeleteComment={handleDeleteComment}
+      />
     </div>
   );
 };
